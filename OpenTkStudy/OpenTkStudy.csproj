@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="OpenTK" Version="4.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Nitride\Nitride.EE.WinUSB\Nitride.EE.WinUSB.csproj" />
     <ProjectReference Include="..\..\Nitride\Nitride.EE\Nitride.EE.csproj" />
     <ProjectReference Include="..\..\Nitride\Nitride\Nitride.csproj" />
@@ -26,7 +30,7 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
+      <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
