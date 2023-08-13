@@ -9,6 +9,9 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using NativeWindow = OpenTK.Windowing.Desktop.NativeWindow;
 using Nitride;
+using System.CodeDom;
+using OpenTkStudy.Properties;
+using Nitride.EE;
 
 namespace OpenTkStudy
 {
@@ -27,11 +30,25 @@ namespace OpenTkStudy
             _timer = new Timer();
             _timer.Tick += (sender, e) =>
             {
+                vertices[0] += 0.1f;
+
+                if (vertices[0] > 1.0f) vertices[0] = 0.0f;
+
+                vertices[1] += 0.1f;
+
+                if (vertices[1] > 1.0f) vertices[1] = 0.0f;
+
+                vertices[2] += 0.1f;
+
+                if (vertices[2] > 1.0f) vertices[2] = 0.0f;
+
                 _angle += 0.5f;
-                Render();
+                Render2();
             };
             _timer.Interval = 50;   // 1000 ms per sec / 50 ms per frame = 20 FPS
             _timer.Start();
+
+            Console.WriteLine("PixelShaderCode = " + PixelShaderCode);
         }
 
         private NativeWindow NativeWindow = null!;
@@ -189,7 +206,7 @@ namespace OpenTkStudy
             ResizeNativeWindow();
 
 
-
+            InitShader();
 
             // And now show the child window, since it hasn't been made visible yet.
             NativeWindow.IsVisible = true;
@@ -249,6 +266,7 @@ namespace OpenTkStudy
 
             if (NativeWindow is NativeWindow win)
             {
+                DeleteShader();
                 win.Dispose();
                 NativeWindow = null!;
             }
@@ -297,8 +315,6 @@ namespace OpenTkStudy
 
             ResizeNativeWindow();
 
-            base.OnResize(e);
-
             if (NativeWindow is NativeWindow win)
             {
                 win.MakeCurrent();
@@ -312,6 +328,8 @@ namespace OpenTkStudy
 
                 // Console.WriteLine("NativeWindow Size = " + win.ClientRectangle + " | Location = " + win.Location);
             }
+
+            base.OnResize(e);
         }
 
         #endregion Resize
@@ -436,11 +454,141 @@ namespace OpenTkStudy
             }
         }
 
+        #region 2D Shader Test
+
+        float[] vertices = new float[]
+        {
+            0.0f, 0.5f, 0f, // v0
+            0.5f, -0.5f, 0f, // v1
+            -0.5f, -0.5f, 0f, // v2
+        };
+
+        private int VertexBufferHandle;
+
+        private int VertexArrayHandle;
+
+        string VertexShaderCode => Resources.VertexShader2; /*= @"
+
+            #version 330 core
+
+            layout (location = 0) in vec3 aPosition;
+
+            void main()
+            {
+                gl_Position = vec4(aPosition, 1.0f);
+            }
+        ";*///
+
+        string PixelShaderCode => Resources.PixelShader2; /*= @"
+
+            #version 330 core
+
+            out vec4 pixelColor;
+
+            void main()
+            {
+                pixelColor = vec4(0.8f, 0.8f, 0.1f, 1.0f);
+            }
+
+        ";*/// => Resources.PixelShader;
+
+        int ShaderProgramHandle; // = GL.CreateP
+
+        public void InitShader()
+        {
+            if (NativeWindow is NativeWindow win)
+            {
+                EnsureCreated();
+                win.MakeCurrent();
+
+                VertexBufferHandle = GL.GenBuffer();
+                GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferHandle);
+                GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StreamDraw); // Static
+                GL.BindBuffer(BufferTarget.ArrayBuffer, 0); // Unbind it??
+
+                VertexArrayHandle = GL.GenVertexArray();
+                GL.BindVertexArray(VertexArrayHandle);
+
+                GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferHandle);
+                GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+                GL.EnableVertexAttribArray(0);
+
+                GL.BindVertexArray(0);
+
+                int vertexShaderHandle = GL.CreateShader(ShaderType.VertexShader);
+                GL.ShaderSource(vertexShaderHandle, VertexShaderCode);
+                GL.CompileShader(vertexShaderHandle);
+
+                int pixelShaderHandle = GL.CreateShader(ShaderType.FragmentShader);
+                GL.ShaderSource(pixelShaderHandle, PixelShaderCode);
+                GL.CompileShader(pixelShaderHandle);
+
+                ShaderProgramHandle = GL.CreateProgram();
+                GL.AttachShader(ShaderProgramHandle, vertexShaderHandle);
+                GL.AttachShader(ShaderProgramHandle, pixelShaderHandle);
+                GL.LinkProgram(ShaderProgramHandle);
+                
+                GL.DetachShader(ShaderProgramHandle, vertexShaderHandle);
+                GL.DetachShader(ShaderProgramHandle, pixelShaderHandle);
+
+                GL.DeleteShader(vertexShaderHandle);
+                GL.DeleteShader(pixelShaderHandle);
+            }
+        }
+
+        public void DeleteShader()
+        {
+            if (NativeWindow is NativeWindow win)
+            {
+                EnsureCreated();
+                win.MakeCurrent();
+                GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+                GL.DeleteBuffer(VertexBufferHandle);
+
+                GL.UseProgram(0);
+                GL.DeleteProgram(ShaderProgramHandle);
+
+                VertexBufferHandle = 0;
+                ShaderProgramHandle = 0;
+            }
+        }
+
+        public void Render2()
+        {
+            if (NativeWindow is NativeWindow win)
+            {
+                EnsureCreated();
+                win.MakeCurrent();
+
+                GL.ClearColor(Color4.Orange);
+                GL.Clear(ClearBufferMask.ColorBufferBit);
+
+                // InitShader();
+
+     
+
+                GL.UseProgram(ShaderProgramHandle);
+
+
+                GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StreamDraw); // Static
+
+                GL.BindVertexArray(VertexArrayHandle);
+                GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
+
+                //Console.WriteLine("ShaderProgramHandle = " + ShaderProgramHandle + " | VertexArrayHandle = " + VertexArrayHandle);
+
+                EnsureCreated();
+                win.Context.SwapBuffers();
+            }
+        }
+
+        #endregion 2D Shader Test
+
         protected override void OnPaint(PaintEventArgs e)
         {
             EnsureCreated();
 
-            Render();
+            Render2();
 
             // Console.WriteLine("NativeWindow Size = " + win.ClientRectangle + " | Location = " + win.Location);
             base.OnPaint(e);

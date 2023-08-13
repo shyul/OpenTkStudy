@@ -61,6 +61,40 @@ namespace OpenTkStudy.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to #version 330 core
+        ///
+        ///out vec4 pixelColor;
+        ///
+        ///void main()
+        ///{
+        ///    pixelColor = vec4(0.8f, 0.8f, 0.1f, 1.0f);
+        ///}
+        ///.
+        /// </summary>
+        internal static string PixelShader {
+            get {
+                return ResourceManager.GetString("PixelShader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to #version 330 core
+        ///
+        ///out vec4 pixelColor;
+        ///
+        ///void main()
+        ///{
+        ///    pixelColor = vec4(0.8f, 0.8f, 0.1f, 1.0f);
+        ///}
+        ///.
+        /// </summary>
+        internal static string PixelShader2 {
+            get {
+                return ResourceManager.GetString("PixelShader2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] shader_test {
@@ -88,6 +122,40 @@ namespace OpenTkStudy.Properties {
         internal static string test2_glsl {
             get {
                 return ResourceManager.GetString("test2.glsl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to #version 330 core
+        ///
+        ///layout (location = 0) in vec3 aPosition;
+        ///
+        ///void main()
+        ///{
+        ///    gl_Position = vec4(aPosition, 1.0f);
+        ///}
+        ///.
+        /// </summary>
+        internal static string VertexShader {
+            get {
+                return ResourceManager.GetString("VertexShader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to #version 330 core
+        ///
+        ///layout (location = 0) in vec3 aPosition;
+        ///
+        ///void main()
+        ///{
+        ///    gl_Position = vec4(aPosition, 1.0f);
+        ///}
+        ///.
+        /// </summary>
+        internal static string VertexShader2 {
+            get {
+                return ResourceManager.GetString("VertexShader2", resourceCulture);
             }
         }
     }

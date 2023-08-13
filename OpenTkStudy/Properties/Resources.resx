@@ -118,10 +118,22 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="PixelShader" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PixelShader.glsl;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="PixelShader2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PixelShader2.glsl;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="shader_test" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\shader_test.glsl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="test2.glsl" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\test2.glsl;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="VertexShader" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\VertexShader.glsl;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="VertexShader2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\VertexShader2.glsl;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
