@@ -124,6 +124,9 @@
   <data name="PixelShader2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\PixelShader2.glsl;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="PixelShaderFt" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PixelShaderFt.glsl;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="shader_test" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\shader_test.glsl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -135,5 +138,8 @@
   </data>
   <data name="VertexShader2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\VertexShader2.glsl;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="VertexShaderFt" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\VertexShaderFt.glsl;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

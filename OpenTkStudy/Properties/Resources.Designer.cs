@@ -61,7 +61,7 @@ namespace OpenTkStudy.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to #version 330 core
+        ///   Looks up a localized string similar to #version 460
         ///
         ///out vec4 pixelColor;
         ///
@@ -78,7 +78,7 @@ namespace OpenTkStudy.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to #version 330 core
+        ///   Looks up a localized string similar to #version 460
         ///
         ///out vec4 pixelColor;
         ///
@@ -91,6 +91,15 @@ namespace OpenTkStudy.Properties {
         internal static string PixelShader2 {
             get {
                 return ResourceManager.GetString("PixelShader2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string PixelShaderFt {
+            get {
+                return ResourceManager.GetString("PixelShaderFt", resourceCulture);
             }
         }
         
@@ -126,7 +135,7 @@ namespace OpenTkStudy.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to #version 330 core
+        ///   Looks up a localized string similar to #version 460
         ///
         ///layout (location = 0) in vec3 aPosition;
         ///
@@ -143,7 +152,7 @@ namespace OpenTkStudy.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to #version 330 core
+        ///   Looks up a localized string similar to #version 460
         ///
         ///layout (location = 0) in vec3 aPosition;
         ///
@@ -156,6 +165,15 @@ namespace OpenTkStudy.Properties {
         internal static string VertexShader2 {
             get {
                 return ResourceManager.GetString("VertexShader2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string VertexShaderFt {
+            get {
+                return ResourceManager.GetString("VertexShaderFt", resourceCulture);
             }
         }
     }

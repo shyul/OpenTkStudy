@@ -12,6 +12,7 @@ using Nitride;
 using System.CodeDom;
 using OpenTkStudy.Properties;
 using Nitride.EE;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace OpenTkStudy
 {
@@ -43,13 +44,18 @@ namespace OpenTkStudy
                 if (vertices[2] > 1.0f) vertices[2] = 0.0f;
 
                 _angle += 0.5f;
+                iTime+=0.1f;
                 Render2();
             };
             _timer.Interval = 50;   // 1000 ms per sec / 50 ms per frame = 20 FPS
-            _timer.Start();
 
-            Console.WriteLine("PixelShaderCode = " + PixelShaderCode);
+
+            // Console.WriteLine("PixelShaderCode = " + PixelShaderCode);
+
+            _timer.Start();
         }
+
+        private float iTime = 0;
 
         private NativeWindow NativeWindow = null!;
 
@@ -130,6 +136,9 @@ namespace OpenTkStudy
             return false;
         }
 
+        public bool IsDesignMode => _isDesignMode ??= DetermineIfThisIsInDesignMode();
+        private bool? _isDesignMode;
+
         /// <summary>
         /// Ensure that the required underlying GLFW window has been created.
         /// </summary>
@@ -157,12 +166,6 @@ namespace OpenTkStudy
                     throw new InvalidOperationException("Failed to recreate GLControl :-(");
             }
         }
-
-
-
-
-
-
 
         #region Create
 
@@ -206,7 +209,7 @@ namespace OpenTkStudy
             ResizeNativeWindow();
 
 
-            InitShader();
+            InitShader2();
 
             // And now show the child window, since it hasn't been made visible yet.
             NativeWindow.IsVisible = true;
@@ -232,10 +235,7 @@ namespace OpenTkStudy
             {
                 ForceFocusToCorrectWindow();
             }
-
-
         }
-
 
         /// <summary>
         /// This private object is used as the reference for the 'Load' handler in
@@ -278,8 +278,6 @@ namespace OpenTkStudy
 
             base.OnHandleDestroyed(e);
         }
-
-
 
         #endregion Create
 
@@ -467,34 +465,13 @@ namespace OpenTkStudy
 
         private int VertexArrayHandle;
 
-        string VertexShaderCode => Resources.VertexShader2; /*= @"
+        string VertexShaderCode => Resources.VertexShader2;
 
-            #version 330 core
-
-            layout (location = 0) in vec3 aPosition;
-
-            void main()
-            {
-                gl_Position = vec4(aPosition, 1.0f);
-            }
-        ";*///
-
-        string PixelShaderCode => Resources.PixelShader2; /*= @"
-
-            #version 330 core
-
-            out vec4 pixelColor;
-
-            void main()
-            {
-                pixelColor = vec4(0.8f, 0.8f, 0.1f, 1.0f);
-            }
-
-        ";*/// => Resources.PixelShader;
+        string PixelShaderCode => Resources.PixelShader2;
 
         int ShaderProgramHandle; // = GL.CreateP
 
-        public void InitShader()
+        public void InitShader3()
         {
             if (NativeWindow is NativeWindow win)
             {
@@ -518,10 +495,12 @@ namespace OpenTkStudy
                 int vertexShaderHandle = GL.CreateShader(ShaderType.VertexShader);
                 GL.ShaderSource(vertexShaderHandle, VertexShaderCode);
                 GL.CompileShader(vertexShaderHandle);
+                Console.WriteLine("vertexShader Log = " + GL.GetShaderInfoLog(vertexShaderHandle));
 
                 int pixelShaderHandle = GL.CreateShader(ShaderType.FragmentShader);
                 GL.ShaderSource(pixelShaderHandle, PixelShaderCode);
                 GL.CompileShader(pixelShaderHandle);
+                Console.WriteLine("pixelShader Log = " + GL.GetShaderInfoLog(pixelShaderHandle));
 
                 ShaderProgramHandle = GL.CreateProgram();
                 GL.AttachShader(ShaderProgramHandle, vertexShaderHandle);
@@ -533,6 +512,86 @@ namespace OpenTkStudy
 
                 GL.DeleteShader(vertexShaderHandle);
                 GL.DeleteShader(pixelShaderHandle);
+
+                Console.WriteLine("ShaderProgram Log = " + GL.GetShaderInfoLog(ShaderProgramHandle));
+            }
+        }
+
+        public void InitShader2()
+        {
+            if (NativeWindow is NativeWindow win)
+            {
+                int status;
+
+                EnsureCreated();
+                win.MakeCurrent();
+
+                int vertexShaderHandle = GL.CreateShader(ShaderType.VertexShader);
+                GL.ShaderSource(vertexShaderHandle, Resources.VertexShaderFt);
+                GL.CompileShader(vertexShaderHandle);
+                Console.WriteLine("vertexShader Log = " + GL.GetShaderInfoLog(vertexShaderHandle));
+                GL.GetShader(vertexShaderHandle, ShaderParameter.CompileStatus, out status);
+                
+                if (status != 1)
+                {
+                    Console.WriteLine("vertex shader error");
+                }
+
+                int pixelShaderHandle = GL.CreateShader(ShaderType.FragmentShader);
+                GL.ShaderSource(pixelShaderHandle, Resources.PixelShaderFt);
+                GL.CompileShader(pixelShaderHandle);
+                Console.WriteLine("pixelShader Log = " + GL.GetShaderInfoLog(pixelShaderHandle));
+                GL.GetShader(pixelShaderHandle, ShaderParameter.CompileStatus, out status);
+                if (status != 1)
+                {
+                    Console.WriteLine("fragment shader error");
+                }
+
+                ShaderProgramHandle = GL.CreateProgram();
+                GL.AttachShader(ShaderProgramHandle, vertexShaderHandle);
+                GL.AttachShader(ShaderProgramHandle, pixelShaderHandle);
+                GL.LinkProgram(ShaderProgramHandle);
+
+                GL.DetachShader(ShaderProgramHandle, vertexShaderHandle);
+                GL.DetachShader(ShaderProgramHandle, pixelShaderHandle);
+
+                GL.DeleteShader(vertexShaderHandle);
+                GL.DeleteShader(pixelShaderHandle);
+
+                Console.WriteLine("ShaderProgram Log = " + GL.GetShaderInfoLog(ShaderProgramHandle));
+                GL.GetProgram(ShaderProgramHandle, GetProgramParameterName.LinkStatus, out status);
+                if (status != 1)
+                {
+                    Console.WriteLine("ShaderProgram shader error");
+                }
+
+      
+            }
+        }
+
+        public void Render2()
+        {
+            if (NativeWindow is NativeWindow win)
+            {
+                EnsureCreated();
+                win.MakeCurrent();
+
+                GL.ClearColor(Color4.Orange);
+                GL.Clear(ClearBufferMask.ColorBufferBit);
+
+                GL.UseProgram(ShaderProgramHandle);
+
+                GL.Uniform3(GL.GetUniformLocation(ShaderProgramHandle, "iResolution"), (float)ClientSize.Width, (float)ClientSize.Height, 0.0f);
+                GL.Uniform1(GL.GetUniformLocation(ShaderProgramHandle, "iTime"), iTime);
+                GL.Begin(PrimitiveType.Quads);
+                GL.Vertex3(-1.0f, 1.0f, 0.0f);
+                GL.Vertex3(-1.0f, -1.0f, 0.0f);
+                GL.Vertex3(1.0f, -1.0f, 0.0f);
+                GL.Vertex3(1.0f, 1.0f, 0.0f);
+                GL.End();
+
+                EnsureCreated();
+                win.Context.SwapBuffers();
             }
         }
 
@@ -553,7 +612,7 @@ namespace OpenTkStudy
             }
         }
 
-        public void Render2()
+        public void Render3()
         {
             if (NativeWindow is NativeWindow win)
             {
@@ -563,12 +622,8 @@ namespace OpenTkStudy
                 GL.ClearColor(Color4.Orange);
                 GL.Clear(ClearBufferMask.ColorBufferBit);
 
-                // InitShader();
-
-     
 
                 GL.UseProgram(ShaderProgramHandle);
-
 
                 GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StreamDraw); // Static
 
